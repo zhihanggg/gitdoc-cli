@@ -1,0 +1,15 @@
+cmd/gitdoc-cli/gitdoc-cli
+.vscode
+.idea
+!cmd/run/templates/*
+cmd/gitdoc-cli/bin
+cmd/gitdoc-cli/conf
+cmd/gitdoc-cli/polaris
+cmd/gitdoc-cli/gitdoc-cli-darwin
+bin
+.gitdoc-cli.yaml
+cmd/gitdoc-cli/gitdoc-cli-ppd-darwin
+.codecc
+cmd/gitdoc-cli/gitdoc-cli-darwin
+cmd/gitdoc-cli/gitdoc-cli-windows.exe
+/.for_test_use

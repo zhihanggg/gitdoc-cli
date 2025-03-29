@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/zhihanggg/gitdoc-cli/cmd/create"
+	init_dev "github.com/zhihanggg/gitdoc-cli/cmd/init"
 	"github.com/zhihanggg/gitdoc-cli/entity/version"
 	"github.com/zhihanggg/gitdoc-cli/log"
 	"github.com/zhihanggg/gitdoc-cli/utils"
@@ -18,7 +19,6 @@ import (
 const configPath = ".gitdoc-cli.yml"
 
 var (
-	save       bool
 	printTrace bool
 )
 
@@ -96,6 +96,7 @@ func setLogLevel(cmd *cobra.Command) {
 func Execute() {
 
 	rootCmd.AddCommand(create.NewCmd())
+	rootCmd.AddCommand(init_dev.NewCmd())
 
 	err := rootCmd.Execute()
 

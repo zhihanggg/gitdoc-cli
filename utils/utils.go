@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
@@ -134,7 +136,7 @@ func ReadEnvFile(path string) (map[string]string, map[string]string, error) {
 // CmdNotSupportWindowsIntercept 判断 os
 func CmdNotSupportWindowsIntercept(cmd string) error {
 	if runtime.GOOS == constant.OSWindows {
-		return fmt.Errorf(fmt.Sprintf("%s命令目前不支持windows环境", cmd))
+		return fmt.Errorf("%s 命令目前不支持windows环境", cmd)
 	}
 	return nil
 }
@@ -206,4 +208,50 @@ func MergeMapValue(mapA, mapB map[string]string) map[string]string {
 		mapA[key] = value
 	}
 	return mapA
+}
+
+// ExecCmd 执行命令并返回结果
+func ExecCmd(cmd string) (string, error) {
+	if runtime.GOOS == constant.OSWindows {
+		return "", fmt.Errorf("暂不支持 Windows 系统")
+	}
+
+	// 执行命令
+	output, err := exec.Command("sh", "-c", cmd).CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("执行命令失败: %v, 输出: %s", err, string(output))
+	}
+
+	return string(output), nil
+}
+
+// ScanFilesByExt 递归扫描指定目录下的特定扩展名文件
+func ScanFilesByExt(root string, extensions []string) ([]string, error) {
+	var files []string
+
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			ext := strings.ToLower(filepath.Ext(path))
+			for _, validExt := range extensions {
+				if ext == validExt {
+					files = append(files, path)
+					break
+				}
+			}
+		}
+		return nil
+	})
+
+	return files, err
+}
+
+// ConvertDocToMarkdown 使用pandoc将doc/docx文件转换为markdown
+func ConvertDocToMarkdown(docPath, mdPath string) error {
+	cmd := fmt.Sprintf("pandoc -s \"%s\" --extract-media=. -t markdown -o \"%s\"", docPath, mdPath)
+	_, err := ExecCmd(cmd)
+	return err
 }

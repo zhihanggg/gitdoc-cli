@@ -8,8 +8,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"github.com/zhihanggg/gitdoc-cli/cmd/commit"
 	"github.com/zhihanggg/gitdoc-cli/cmd/create"
 	init_dev "github.com/zhihanggg/gitdoc-cli/cmd/init"
+	"github.com/zhihanggg/gitdoc-cli/cmd/push"
+	"github.com/zhihanggg/gitdoc-cli/constant"
 	"github.com/zhihanggg/gitdoc-cli/entity/version"
 	"github.com/zhihanggg/gitdoc-cli/log"
 	"github.com/zhihanggg/gitdoc-cli/utils"
@@ -68,7 +71,7 @@ func bindParams(cmd *cobra.Command) {
 	prefix := utils.GetParamPrefix(cmd)
 	cmd.Flags().VisitAll(func(flag *pflag.Flag) {
 		// 子命令 跳过 save 这个命令行参数， help Flag 会在 command.persistentPreRun 前自动引入
-		if flag.Name == "save" || flag.Name == "help" {
+		if flag.Name == "help" {
 			return
 		}
 		_ = viper.BindPFlag(prefix+flag.Name, flag)
@@ -76,9 +79,7 @@ func bindParams(cmd *cobra.Command) {
 }
 
 func setLogLevel(cmd *cobra.Command) {
-	var format = logging.MustStringFormatter(
-		`%{color}%{time:15:04:05} %{shortfunc} [%{level:.4s}]%{color:reset} %{message}`,
-	)
+	var format = logging.MustStringFormatter(constant.LogFormat)
 	var backend = logging.AddModuleLevel(
 		logging.NewBackendFormatter(logging.NewLogBackend(os.Stderr, "", 0), format))
 	prefix := utils.GetParamPrefix(cmd)
@@ -97,6 +98,8 @@ func Execute() {
 
 	rootCmd.AddCommand(create.NewCmd())
 	rootCmd.AddCommand(init_dev.NewCmd())
+	rootCmd.AddCommand(commit.NewCmd())
+	rootCmd.AddCommand(push.NewCmd())
 
 	err := rootCmd.Execute()
 

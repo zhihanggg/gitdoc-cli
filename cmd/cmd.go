@@ -12,6 +12,7 @@ import (
 	"github.com/zhihanggg/gitdoc-cli/cmd/create"
 	init_dev "github.com/zhihanggg/gitdoc-cli/cmd/init"
 	"github.com/zhihanggg/gitdoc-cli/cmd/push"
+	"github.com/zhihanggg/gitdoc-cli/cmd/state"
 	"github.com/zhihanggg/gitdoc-cli/constant"
 	"github.com/zhihanggg/gitdoc-cli/entity/version"
 	"github.com/zhihanggg/gitdoc-cli/log"
@@ -100,6 +101,7 @@ func Execute() {
 	rootCmd.AddCommand(init_dev.NewCmd())
 	rootCmd.AddCommand(commit.NewCmd())
 	rootCmd.AddCommand(push.NewCmd())
+	rootCmd.AddCommand(state.NewCmd())
 
 	err := rootCmd.Execute()
 
